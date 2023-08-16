@@ -65,7 +65,6 @@ def teacher_classwork(subject_id):
     subject = Subj.query.get(subject_id)
     materials = Material.query.filter_by(subject_id=subject_id).order_by(Material.created_at.desc()).all()
     assignments = Assignment.query.filter_by(subject_id=subject_id).order_by(Assignment.created_at.desc()).all()
-    quizzes = Quiz.query.filter(Quiz.subjects.any(id=subject_id)).order_by(Quiz.created_at.desc()).all()  # Query quizzes related to the subject
 
     if not subject:
         flash('Subject not found.', 'error')
@@ -188,27 +187,72 @@ def teacher_classwork(subject_id):
             else:
                 flash('Assignment creation failed! Please make sure to provide at least one valid file.', 'error')
 
-        elif content_type == 'quiz':  # Handle quiz creation
+        elif content_type == 'quiz':
             quiz_title = request.form.get('quizTitle')
-            timer = int(request.form.get('quizTimer'))  # Assuming the timer input has a name attribute 'quizTimer'
-            question_data = request.form.get('quizData')  # This should contain JSON data with the quiz questions and answers
+            quiz_instructions = request.form.get('quizInstructions')
+            quiz_timer = int(request.form.get('quizTimer'))
             
-            # Process the question_data JSON to create quiz questions and choices
+            # Get the number of questions you have in the form
+            num_questions = int(request.form.get('numQuestions'))
+
+            print('Quiz Title:', quiz_title)  # Debugging print
+            print('Quiz Instructions:', quiz_instructions)  # Debugging print
+            print('Quiz Timer:', quiz_timer)  # Debugging print
+            print('Number of Questions:', num_questions)  # Debugging print
+
+            # Collect quiz questions, options, and correct answers from the form
+            quiz_questions_data = []
+
+            for i in range(num_questions):
+                question = request.form.get(f'question_{i}')
+                question_type = request.form.get(f'questionType_{i}')
+                options = []
+                correct_answer = ''
+
+                print(f'Question {i + 1}:', question)  # Debugging print
+                print(f'Question Type {i + 1}:', question_type)  # Debugging print
+
+                if question_type == 'multiple_choice':
+                    for j in range(4):
+                        option = request.form.get(f'option_{i}_{j}')
+                        options.append(option)
+
+                        print(f'Option {j + 1} for Question {i + 1}:', option)  # Debugging print
+
+                    correct_answer = request.form.get(f'correct_{i}')
+
+                    print(f'Correct Answer for Question {i + 1}:', correct_answer)  # Debugging print
+
+                # Add the collected data to the quiz_questions_data list
+                quiz_questions_data.append({
+                    'question': question,
+                    'question_type': question_type,
+                    'options': options,
+                    'correct_answer': correct_answer
+                })
+
+            print('Quiz Questions Data:', quiz_questions_data)  # Debugging print
 
             new_quiz = Quiz(
                 title=quiz_title,
-                timer=timer,
+                instructions=quiz_instructions,
+                timer=quiz_timer,
+                questions=quiz_questions_data,
                 teacher=current_user,
-                subjects=[subject]
+                subject_id=subject_id,
+                created_at=datetime.utcnow()
             )
-            
-            # Create the quiz questions and choices here based on the question_data JSON
-            # ...
 
             db.session.add(new_quiz)
-            db.session.commit()
 
-            flash('Quiz created!', 'success')
+            try:
+                db.session.commit()
+                flash('Quiz created!', 'success')
+                print('Quiz created successfully!')  # Add this print statement
+            except Exception as e:
+                db.session.rollback()  # Rollback in case of error
+                flash('Error creating quiz: ' + str(e), 'error')
+                print('Exception during database commit:', e)
 
     announcements = subject.announcements[::-1]
     
@@ -218,11 +262,10 @@ def teacher_classwork(subject_id):
         material.content_type = 'material'
     for assignment in assignments:
         assignment.content_type = 'assignment'
-    for quiz in quizzes:
-        quiz.content_type = 'quiz'
+
 
     # Combine announcements, materials, and assignments into a single list
-    content_list = announcements + materials + assignments + quizzes
+    content_list = announcements + materials + assignments
 
     # Sort the combined list by creation date
     content_list.sort(key=lambda content: content.created_at, reverse=True)
@@ -282,42 +325,3 @@ def view_announcement(announcement_id):
 def view_material(material_id):
     material = Material.query.options(joinedload(Material.teacher)).get_or_404(material_id)
     return render_template('teacher-view-material.html', material=material, subject=material.subject)
-
-
-simple_blueprint = Blueprint('simple', __name__)
-
-# Configure the upload folder
-UPLOAD_FOLDER = 'uploads'  # Change this to your desired upload folder
-ALLOWED_EXTENSIONS = {'pdf', 'doc', 'docx', 'txt'}  # Allowed file extensions
-
-# Function to check if a file has an allowed extension
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-# Route to render the simple file upload form
-@views.route('/simple-upload', methods=['GET', 'POST'])
-def simple_upload():
-    if request.method == 'POST':
-        # Check if the 'file' field exists in the request
-        if 'file' not in request.files:
-            flash('No file part', 'error')
-            return redirect(request.url)
-        
-        file = request.files['file']
-        
-        # If the user does not select a file, the browser submits an empty part without a filename
-        if file.filename == '':
-            flash('No selected file', 'error')
-            return redirect(request.url)
-        
-        # Check if the file has an allowed extension
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(UPLOAD_FOLDER, filename))
-            flash('File uploaded successfully', 'success')
-            return redirect(url_for('simple.simple_upload'))  # Redirect back to the upload form
-        else:
-            flash('Invalid file format', 'error')
-            return redirect(request.url)
-    
-    return render_template('simple_upload_form.html')  # Create this HTML file for the form

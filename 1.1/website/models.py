@@ -2,6 +2,7 @@ from website import db
 from flask_login import UserMixin
 from datetime import datetime  # Import the datetime module
 from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Integer, String, ForeignKey, JSON, DateTime
 
 # Association table for the many-to-many relationship between Teacher and Subject
 teacher_subject_association = db.Table('teacher_subject_association',
@@ -34,6 +35,7 @@ class Teacher(db.Model, UserMixin):
 
     # Define the relationship with the Subject model
     subjects = db.relationship('Subj', secondary=teacher_subject_association, backref=db.backref('teachers', lazy='dynamic'))
+    quiz_relationship = db.relationship('Quiz', back_populates='teacher')  # Add this line
 
 class Administrator(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -47,6 +49,7 @@ class Subj(db.Model, UserMixin):
     course = db.Column(db.String(150))
     code = db.Column(db.String(150), unique=True)
     invCode = db.Column(db.String(150), unique=True)
+    quiz_relationship = db.relationship('Quiz', back_populates='subject')  # Add this line
 
 class Announcement(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -111,60 +114,15 @@ quiz_subject_association = db.Table('quiz_subject_association',
 )
 
 class Quiz(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(150), nullable=False)
-    timer = db.Column(db.Integer, nullable=False)  # Timer for the quiz
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    __tablename__ = 'quizzes'
+    id = Column(Integer, primary_key=True)
+    title = Column(String(255), nullable=False)
+    instructions = Column(String(1000))
+    timer = Column(Integer, nullable=False)  # Timer in minutes
+    questions = Column(JSON, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    teacher_id = Column(Integer, ForeignKey('teacher.id'), nullable=False)
+    subject_id = Column(Integer, ForeignKey('subj.id'), nullable=False)
 
-    teacher_id = db.Column(db.Integer, db.ForeignKey('teacher.id'), nullable=False)
-    teacher = db.relationship('Teacher', backref=db.backref('quizzes', lazy=True))
-
-    subjects = db.relationship('Subj', secondary=quiz_subject_association, backref=db.backref('quizzes', lazy='dynamic'))
-
-    questions = db.relationship('Question', backref='quiz', lazy=True)
-
-    def __repr__(self):
-        return f"<Quiz(id={self.id}, title='{self.title}', teacher_id={self.teacher_id})>"
-
-class Question(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    text = db.Column(db.Text, nullable=False)
-    type = db.Column(db.String(20), nullable=False)  # Type of question (e.g., multiple-choice, identification)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-
-    quiz_id = db.Column(db.Integer, db.ForeignKey('quiz.id'), nullable=False)
-
-    choices = db.relationship('Choice', backref='question', lazy=True)  # Relationship for multiple-choice questions
-    identifications = db.relationship('Identification', backref='question', uselist=False)  # Relationship for identification questions
-    true_false = db.relationship('TrueFalse', backref='question', uselist=False)  # Relationship for true-false questions
-
-    def __repr__(self):
-        return f"<Question(id={self.id}, type='{self.type}', quiz_id={self.quiz_id})>"
-
-class Choice(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    text = db.Column(db.String(255), nullable=False)
-    is_correct = db.Column(db.Boolean, nullable=False, default=False)
-
-    question_id = db.Column(db.Integer, db.ForeignKey('question.id'), nullable=False)
-
-    def __repr__(self):
-        return f"<Choice(id={self.id}, is_correct={self.is_correct}, question_id={self.question_id})>"
-
-class Identification(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    correct_answer = db.Column(db.String(255), nullable=False)
-
-    question_id = db.Column(db.Integer, db.ForeignKey('question.id'), nullable=False)
-
-    def __repr__(self):
-        return f"<Identification(id={self.id}, question_id={self.question_id})>"
-
-class TrueFalse(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    correct_answer = db.Column(db.Boolean, nullable=False)
-
-    question_id = db.Column(db.Integer, db.ForeignKey('question.id'), nullable=False)
-
-    def __repr__(self):
-        return f"<TrueFalse(id={self.id}, question_id={self.question_id})>"
+    teacher = relationship("Teacher", back_populates="quiz_relationship")  # Update here
+    subject = relationship("Subj", back_populates="quiz_relationship")  # Update here
