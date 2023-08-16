@@ -1,0 +1,335 @@
+{% extends "base.html" %}
+
+{% block title %}Classwork for {{ subject.course }}{% endblock %}
+
+{% block barnav %}
+    {% include "navbar-teacher.html" %}
+    {% include "navbar-teacher-secondary.html" %}
+{% endblock %}
+
+{% block content %}
+{% include "teacher-modal-content.html" %}
+{% include "teacher-modal-announcement.html" %}
+{% include "teacher-modal-material.html" %}
+{% include "teacher-modal-assignment.html" %}
+{% include "teacher-modal-quiz.html" %}
+
+<div class="container-fluid mt-5">
+    <div class="row">
+        <div class="col-md-2 offset-md-1 text-center">
+            <a href="#" class="btn btn-primary btn-lg" role="button" data-bs-toggle="modal" data-bs-target="#contentModal">Create Content</a>
+        </div>
+    </div>
+</div>
+
+<div id="combinedAccordion" style="margin-top: 150px;" class="container-fluid mt-5">
+    {% for content in content_list %}
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="heading{{ content.id }}">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ content.id }}" aria-expanded="false" aria-controls="collapse{{ content.id }}">
+                    {% if content.content_type == 'announcement' %}
+                        <i class="fas fa-book me-2"></i>
+                    {% elif content.content_type == 'material' %}
+                        <i class="fas fa-file me-2"></i>
+                    {% elif content.content_type == 'assignment' %}
+                        <i class="fas fa-tasks me-2"></i>
+                    {% endif %}
+                    <div class="accordion-button-content">
+                        <h4 class="content-title">{{ content.title|upper }}</h4>
+                        <div style="display: flex; align-items: center;">
+                            <p style="font-family: 'ProductSansBold'; font-size: 15px; padding-right: 10px;">
+                                {{ content.created_at.strftime('%Y-%m-%d %H:%M') }}
+                            </p>
+                        </div>
+                    </div>
+                </button>
+            </h2>
+            <div id="collapse{{ content.id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ content.id }}" data-bs-parent="#combinedAccordion">
+                <div class="accordion-body" style="font-family: 'ProductSansBold'; ">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <p class="card-text" style="font-size: 17px; text-align: justify;">{{ content.content }}</p>
+                            {% if content.content_type == 'assignment' %}
+                                <p class="card-text" style="font-size: 15px; text-align: justify;">{{ content.description }}</p>
+                                {% if content.file_path %}
+                                    <a href="{{ url_for('static', filename='files/' + content.file_path) }}" download style="background-color: #119DA4; border: none;" class="btn btn-primary me-2">Download Assignment</a>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                        <div class="card-footer">
+                            <div class="d-flex justify-content-end align-items-center">
+                                <!-- Assignment specific actions -->
+                                {% if content.content_type == 'assignment' %}
+                                    <!-- Display assignment specific actions here -->
+                                    <a href="#" class="btn btn-primary me-2" onclick="viewAssignment('{{ content.id }}')">View Assignment</a>
+                                    {% for assignment_file in content.assignment_files %}
+                                        <a href="{{ url_for('static', filename='files/' + assignment_file.file_path) }}" download style="background-color: #119DA4; border: none;" class="btn btn-primary me-2">Download</a>
+                                    {% endfor %}
+                                    <a href="#" class="btn btn-primary me-2" onclick="openEditAnnouncementModal('{{ content.id }}')">Edit</a>
+                                    <a href="#" style="background-color: red;" class="btn btn-primary me-2" onclick="deleteAssignment('{{ content.id }}', '{{ content.title }}')">Delete</a>
+                                {% elif content.content_type == 'announcement' %}
+                                    <!-- Announcement specific actions -->
+                                    <a href="#" style="background-color: #7FB069; border: none;" class="btn btn-primary me-2" onclick="viewAnnouncement('{{ content.id }}')">View Material</a>
+                                    <a href="#" class="btn btn-primary me-2" onclick="openEditAnnouncementModal('{{ content.id }}')">Edit</a>
+                                    {% include "teacher-modal-edit-announcement.html" %}
+                                    <a href="#" style="background-color: red;" class="btn btn-primary me-2" onclick="deleteAnnouncement('{{ content.id }}', '{{ content.title }}')">Delete</a>
+                                {% elif content.content_type == 'material' %}
+                                    <!-- Material specific actions -->
+                                    <a href="#" style="background-color: #7FB069; border: none;" class="btn btn-primary me-2" onclick="viewMaterial('{{ content.id }}')">View Material</a>
+                                    {% if content.file_path %}
+                                        <a href="{{ url_for('static', filename='files/' + content.file_path) }}" download style="background-color: #119DA4; border: none;" class="btn btn-primary me-2">Download</a>
+                                    {% endif %}
+                                    <a href="#" class="btn btn-primary me-2" onclick="openEditMaterialModal('{{ content.id }}')">Edit</a>
+                                    {% include "teacher-modal-edit-material.html" %}
+                                    <a href="#" style="background-color: red;" class="btn btn-primary me-2" onclick="deleteMaterial('{{ content.id }}', '{{ content.title }}')">Delete</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+
+<style>
+    
+
+    /* Add a top margin to the content below the navbar */
+    body {
+        margin-top: 70px; /* Adjust the value as needed */
+    }
+
+    /* Add hover effect to the accordion header */
+    .accordion-header button {
+        font-family: 'ProdigySansExtraBold';
+        font-size: 24px;
+        padding-bottom: 15px;
+        background-color: transparent;
+        display: flex;
+        align-items: center;
+        padding-left: 10px;
+        padding-top: 10px;
+        border: 2px solid transparent; /* Add a transparent border */
+        transition: border 0.2s; /* Add a smooth transition effect for the border */
+    }
+
+    .accordion-header button:hover {
+        background-color: #f8f9fa; /* Change the background color on hover */
+        border: 2px solid #156064; /* Set the border style, width, and color on hover */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow on hover */
+    }
+
+    /* Add border-radius to make the button rounded */
+    .accordion-button {
+        border-radius: 20px;
+    }
+
+    /* Use flexbox to align the elements properly */
+    .accordion-button-content {
+        flex: 1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .announcement-title {
+        margin-right: auto;
+    }
+
+    #announcementAccordion {
+        margin-top: 100px; /* Adjust the value as needed */
+    }
+
+    /* Add hover effect to the accordion header */
+    .accordion-header button {
+        font-family: 'ProdigySansExtraBold';
+        font-size: 24px;
+        padding-bottom: 15px;
+        background-color: transparent;
+        display: flex;
+        align-items: center;
+        border-radius: 10px;
+        padding-left: 10px;
+        padding-top: 10px;
+        border: 2px solid transparent; /* Add a transparent border */
+        transition: border 0.2s; /* Add a smooth transition effect for the border */
+    }
+
+    .accordion-header button:hover {
+        background-color: #f8f9fa; /* Change the background color on hover */
+        border: 2px solid #156064; /* Set the border style, width, and color on hover */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow on hover */
+    }
+
+    /* Additional styling for the button */
+    .btn-primary {
+        /* Customize the button color */
+        background-color: #FFA500;
+        border-color: #FFA500;
+        color: white;
+        margin-top: 100px;
+        font-family: 'ProductSansBold';
+    }
+
+    .btn-primary:hover {
+        /* Change the button color on hover */
+        background-color: #FF8C00;
+        border-color: #FF8C00;
+        color: white;
+    }
+
+    /* Additional styling for dark mode */
+    .modal-dark .modal-content {
+        background-color: #343a40;
+        color: #f8f9fa;
+    }
+
+    .modal-dark .modal-content .modal-header {
+        background-color: #212529;
+        border-bottom: 1px solid #343a40;
+        color: #f8f9fa;
+    }
+
+    .modal-dark .modal-content .modal-body {
+        background-color: #343a40;
+        color: #f8f9fa;
+    }
+
+    .modal-dark .modal-content .list-group-item {
+        background-color: #343a40;
+        color: #f8f9fa;
+        cursor: pointer;
+    }
+
+    .modal-dark .modal-content .list-group-item:hover {
+        background-color: #495057;
+    }
+
+    .modal-dark .modal-content .modal-footer {
+        background-color: #343a40;
+        border-top: 1px solid #343a40;
+        color: #f8f9fa;
+    }
+</style>
+
+<script>
+    function createContent(contentType) {
+        if (contentType === 'Announcement') {
+            openAnnouncementModal()
+        } else if (contentType === 'Material') {
+            openMaterialModal();    
+        } else if (contentType === 'Assignment') {
+            openAssignmentModal();
+        } else if (contentType === 'Quiz') {
+            openQuizModal()
+        }else if (contentType === 'Exam') {
+            // Handle the case for creating a quiz
+            alert('Creating Quiz content...');
+        } else {
+            // Handle any other case or unknown content type
+            alert('Unknown content type: ' + contentType);
+        }
+    }
+
+    function deleteAnnouncement(announcementID, announcementTitle) {
+        if (confirm("Are you sure you want to delete this announcement?")) {
+            var deleteUrl = "/del-announcement/" + announcementID;
+            window.location.href = deleteUrl;
+        }
+    }
+
+    function deleteMaterial(announcementID, announcementTitle) {
+        if (confirm("Are you sure you want to delete this material?")) {
+            var deleteUrl = "/del-material/" + announcementID;
+            window.location.href = deleteUrl;
+        }
+    }
+
+    function deleteAssignment(assignmentID, assignmentTitle) {
+        if (confirm("Are you sure you want to delete this assignment?")) {
+            var deleteUrl = "/del-assignment/" + assignmentID;
+            window.location.href = deleteUrl;
+        }
+    }
+
+    function viewAnnouncement(announcementID) {
+        var viewUrl = "/view-announcement/" + announcementID;
+            window.location.href = viewUrl;
+    }
+
+    function viewMaterial(materialID) {
+        var viewUrl = "/view-material/" + materialID;
+            window.location.href = viewUrl;
+    }
+    
+    function openAnnouncementModal() {
+        // Get the announcement modal element
+        const announcementModal = document.getElementById('announcementModal');
+
+        // Create a new Modal object using Bootstrap's Modal constructor
+        const modal = new bootstrap.Modal(announcementModal);
+
+        // Show the modal
+        modal.show();
+    }
+
+    function openMaterialModal() {
+        // Get the announcement modal element
+        const materialModalLabel = document.getElementById('materialModal');
+
+        // Create a new Modal object using Bootstrap's Modal constructor
+        const modal = new bootstrap.Modal(materialModalLabel);
+
+        // Show the modal
+        modal.show();
+    }
+
+    function openAssignmentModal() {
+        // Get the announcement modal element
+        const assignmentModalLabel = document.getElementById('assignmentModal');
+
+        // Create a new Modal object using Bootstrap's Modal constructor
+        const modal = new bootstrap.Modal(assignmentModalLabel);
+
+        // Show the modal
+        modal.show();
+    }
+
+    function openQuizModal() {
+        // Get the quiz modal element
+        const quizModalLabel = document.getElementById('quizModal');
+
+        // Create a new Modal object using Bootstrap's Modal constructor
+        const modal = new bootstrap.Modal(quizModal);
+
+        // Show the modal
+        modal.show();
+    }
+
+
+    function openEditMaterialModal(materialId) {
+    // Get the modal element based on the material ID
+    const editMaterialModalLabel = document.getElementById('editMaterialModal' + materialId);
+
+    // Create a new Modal object using Bootstrap's Modal constructor
+    const modal = new bootstrap.Modal(editMaterialModalLabel);
+
+    // Show the modal
+    modal.show();
+}
+
+    function openEditAnnouncementModal(announcementID) {
+        // Get the modal element based on the material ID
+        const editAnnouncementlModalLabel = document.getElementById('editModal' + announcementID);
+
+        // Create a new Modal object using Bootstrap's Modal constructor
+        const modal = new bootstrap.Modal(editAnnouncementlModalLabel);
+
+        // Show the modal
+        modal.show();
+    }
+
+</script>
+{% endblock %}

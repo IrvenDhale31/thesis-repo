@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block barnav %}
+    {% include "navbar-student.html" %}
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid mt-5 pt-4" style="font-family: 'ProductSansBold'; padding: 0;">
+        <div class="row" style="margin-left: 0;">
+            {% for subject in enrolled_subjects %}
+            <div class="col-md-4"> <!-- Use col-md-3 to make four tiles per row -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="subject-title" style="background-color: #C2D8B9; padding: 10px; border-radius: 10px; margin-bottom: 10px;">
+                            <a href="#" onclick="return viewSubject('{{ subject.id }}')" style="text-decoration: none;">
+                                <h5 class="card-title" style="font-family: ProdigySansExtraBold; margin: 0; text-transform: uppercase; color: black;">{{ subject.course }}</h5>
+                            </a>
+                        </div>
+                        <p class="card-text">Teacher:
+                            {% for teacher in subject.teachers %}
+                                {{ teacher.givenName }} {{ teacher.lastName }}
+                            {% endfor %}
+                            <br> Section: {{ subject.section }} <br> {{ subject.code }}
+                        </p>
+                        <a href="#" onclick="return viewSubject('{{ subject.id }}')"class="btn btn-success">View Subject</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <style>
+        /* CSS for the hover effect on the subject title */
+        .subject-title {
+            background-color: #FFFCF7;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            transition: background-color 0.2s ease;
+        }
+
+        .subject-title a {
+            text-decoration: none;
+        }
+
+        .subject-title:hover {
+            background-color: #A2C48F !important; /* Change this color to the desired color on hover */
+        }
+
+        /* Remove default margin on body */
+        body {
+            margin: 0;
+        }
+    </style>
+
+<script>
+    function viewSubject(subjID) {
+      var viewSubject = "/view-subject/" + subjID;
+      window.location.href = viewSubject;
+    }
+  </script>
+
+{% endblock %}

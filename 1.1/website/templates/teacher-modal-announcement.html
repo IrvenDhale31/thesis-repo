@@ -1,0 +1,26 @@
+<!-- Announcement Modal -->
+<div class="modal fade" id="announcementModal" tabindex="-1" aria-labelledby="announcementModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-dark">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="announcementModalLabel" style="font-family: 'ProdigySansExtraBold';">CREATE ANNOUNCEMENT</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Content Type Form -->
+                <form style="font-family: 'ProductSansBold';" method="post" onsubmit="return createContent('Announcement');">
+                    <input type="hidden" name="content_type" value="announcement">
+                    <div class="mb-3">
+                        <label for="announcementTitle" class="form-label">Title</label>
+                        <input type="text" class="form-control" id="announcementTitle" name="announcementTitle" placeholder="Enter the announcement title" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="announcementContent" class="form-label">Content</label>
+                        <textarea class="form-control" id="announcementContent" name="announcementContent" rows="5" placeholder="Enter the announcement content" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-warning">CREATE</button>
+                </form>                                            
+            </div>                                               
+        </div>
+    </div>
+</div>

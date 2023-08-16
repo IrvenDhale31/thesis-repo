@@ -1,0 +1,78 @@
+<!-- Title card for the subject details -->
+<div class="subject-title-card" style="margin-top: 130px;">
+    <h2>{{ subject.course|upper }}</h2>
+    <p style="padding-left: 20px; font-family: 'ProductSansBold';">{% for teacher in subject.teachers %}{{ teacher.givenName }} {{ teacher.lastName }}{% endfor %}</p>
+</div>
+<div class="col-md-4">
+    <!-- Tile for the invitation code -->
+    <div class="invitation-code-tile">
+        <h5>INVITATION CODE</h5>
+        <p>{{ subject.invCode }} <a href="#" onclick="copyInvitationCode('{{ subject.id }}', '{{ subject.invCode }}')"><i class="far fa-copy" style="color: black;"></i></a></p>
+    </div>
+</div>
+
+
+<style>
+    /* CSS for the title card */
+    .subject-title-card {
+        background-color: #F8E16C;
+        padding: 10px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+
+    .subject-title-card h2 {
+        font-family: 'ProdigySansExtraBold';
+        text-transform: uppercase;
+        color: black;
+        text-align: center;
+        margin: 0;
+        text-align: left;
+        padding-left: 20px;
+        padding-top: 80px;
+    }
+
+    .invitation-code-tile {
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            height: 110px;
+            width: 200px;
+            border: 1px solid black; /* Add a black border */
+        }
+
+        .invitation-code-tile h5 {
+            font-family: 'ProdigySansExtraBold';
+            color: black;
+            margin: 0;
+            text-align: center;
+        }
+
+        .invitation-code-tile p {
+            font-family: 'ProductSansBold';
+            text-align: center;
+            margin: 0;
+            padding-top: 10px;
+            font-size: 18px;
+        }
+</style> 
+
+<script>
+    function copyInvitationCode(subjectId, subjectInvCode) {
+        const codeToCopy = generateInvitationCode(subjectId, subjectInvCode);
+        const textarea = document.createElement('textarea');
+        textarea.value = codeToCopy;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+
+        // Flash a message to indicate successful copy
+        alert('Invitation code copied to clipboard!');
+    }
+
+    function generateInvitationCode(subjectId, subjectInvCode) {
+        // Here, you can customize the logic to generate the invitation code based on subjectId and subjectInvCode
+        return subjectInvCode; // For now, let's just return the subjectInvCode as it is
+    }
+</script>

@@ -1,0 +1,239 @@
+<!-- Quiz Modal -->
+<div class="modal fade dark-mode" id="quizModal" tabindex="-1" aria-labelledby="quizModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content bg-dark text-white">
+            <div class="modal-header">
+                <h5 class="modal-title" id="quizModalLabel">Create Quiz</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="quizForm"> <!-- Add an ID to the form -->
+                    <div class="mb-3">
+                        <label for="quizTitle" class="form-label">Quiz Title</label>
+                        <input type="text" class="form-control" id="quizTitle" placeholder="Enter quiz title" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="quizTimer" class="form-label">Timer (minutes)</label>
+                        <input type="number" class="form-control" id="quizTimer" placeholder="Enter quiz timer" required>
+                    </div>
+                    <!-- Question Blocks will be added here -->
+                    <div id="questionBlocks"></div>
+                    
+                    <div class="d-flex justify-content-end mt-3">
+                        <button type="button" class="btn btn-primary" id="addQuestionBtn">Add Question</button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="createQuizBtn">Create Quiz</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        font-family: 'ProductSansBold', sans-serif;
+    }
+
+    .dark-mode .modal-content {
+        background-color: #333;
+    }
+
+    .dark-mode .modal-header,
+    .dark-mode .modal-footer {
+        background-color: #222;
+        border-color: #111;
+    }
+
+    .dark-mode .modal-body {
+        background-color: #444;
+    }
+</style>
+
+<!-- ... Previous code ... -->
+
+<script>
+    let questionNumber = 1;
+
+    function addQuestionBlock() {
+        const questionBlocks = document.getElementById("questionBlocks");
+
+        const questionDiv = document.createElement("div");
+        questionDiv.classList.add("mb-4", "question-block");
+
+        const questionTitle = document.createElement("h6");
+        questionTitle.textContent = `Question ${questionNumber}`;
+        questionDiv.appendChild(questionTitle);
+
+        const questionInput = document.createElement("input");
+        questionInput.type = "text";
+        questionInput.classList.add("form-control", "mb-2");
+        questionInput.placeholder = "Enter your question here";
+        questionDiv.appendChild(questionInput);
+
+        const answerTypeSelect = document.createElement("select");
+        answerTypeSelect.classList.add("form-select");
+        answerTypeSelect.innerHTML = `
+            <option value="multiple-choice">Multiple Choice</option>
+            <option value="identification">Identification</option>
+            <option value="true-false">True or False</option>
+        `;
+        questionDiv.appendChild(answerTypeSelect);
+
+        const answerContainer = document.createElement("div");
+        questionDiv.appendChild(answerContainer);
+
+        const removeButton = document.createElement("button");
+        removeButton.textContent = "Remove";
+        removeButton.classList.add("btn", "btn-danger", "mt-2");
+        removeButton.addEventListener("click", function () {
+            questionBlocks.removeChild(questionDiv);
+            updateQuestionNumbers();
+        });
+        questionDiv.appendChild(removeButton);
+
+        answerTypeSelect.addEventListener("change", function () {
+            const selectedType = this.value;
+            answerContainer.innerHTML = "";
+
+            if (selectedType === "multiple-choice") {
+                addMultipleChoiceOptions(answerContainer);
+            } else if (selectedType === "identification") {
+                addIdentificationInput(answerContainer);
+            } else if (selectedType === "true-false") {
+                addTrueFalseOptions(answerContainer);
+            }
+        });
+
+        questionBlocks.appendChild(questionDiv);
+        questionNumber++;
+    }
+
+    function addMultipleChoiceOptions(container) {
+        const optionsContainer = document.createElement("div");
+
+        const optionLabels = ["A", "B", "C", "D"];
+
+        for (let i = 0; i < optionLabels.length; i++) {
+            const optionDiv = document.createElement("div");
+            optionDiv.classList.add("input-group", "mb-2");
+
+            const optionInputGroupText = document.createElement("span");
+            optionInputGroupText.classList.add("input-group-text");
+            optionInputGroupText.textContent = optionLabels[i];
+            optionDiv.appendChild(optionInputGroupText);
+
+            const optionInput = document.createElement("input");
+            optionInput.type = "text";
+            optionInput.classList.add("form-control");
+            optionInput.placeholder = `Enter option ${optionLabels[i]}`;
+            optionDiv.appendChild(optionInput);
+
+            optionsContainer.appendChild(optionDiv);
+        }
+
+        container.appendChild(optionsContainer);
+
+        const correctAnswerInput = document.createElement("input");
+        correctAnswerInput.type = "text";
+        correctAnswerInput.classList.add("form-control", "mt-2");
+        correctAnswerInput.placeholder = "Enter correct answer (e.g., A)";
+        container.appendChild(correctAnswerInput);
+    }
+
+    function addIdentificationInput(container) {
+        const identificationInput = document.createElement("input");
+        identificationInput.type = "text";
+        identificationInput.classList.add("form-control", "mt-2");
+        identificationInput.placeholder = "Enter correct answer";
+        container.appendChild(identificationInput);
+    }
+
+    function addTrueFalseOptions(container) {
+        const trueFalseContainer = document.createElement("div");
+
+        const trueLabel = document.createElement("label");
+        trueLabel.classList.add("form-check", "form-check-inline");
+        const trueInput = document.createElement("input");
+        trueInput.type = "radio";
+        trueInput.name = `answer_${questionNumber}`;
+        trueInput.value = "true";
+        trueInput.classList.add("form-check-input");
+        trueLabel.appendChild(trueInput);
+        trueLabel.appendChild(document.createTextNode("True"));
+        trueFalseContainer.appendChild(trueLabel);
+
+        const falseLabel = document.createElement("label");
+        falseLabel.classList.add("form-check", "form-check-inline");
+        const falseInput = document.createElement("input");
+        falseInput.type = "radio";
+        falseInput.name = `answer_${questionNumber}`;
+        falseInput.value = "false";
+        falseInput.classList.add("form-check-input");
+        falseLabel.appendChild(falseInput);
+        falseLabel.appendChild(document.createTextNode("False"));
+        trueFalseContainer.appendChild(falseLabel);
+
+        container.appendChild(trueFalseContainer);
+
+        const correctAnswerInput = document.createElement("input");
+        correctAnswerInput.type = "text";
+        correctAnswerInput.classList.add("form-control", "mt-2");
+        correctAnswerInput.placeholder = "Enter correct answer (e.g., True or False)";
+        container.appendChild(correctAnswerInput);
+    }
+
+    function updateQuestionNumbers() {
+        const questionBlocks = document.querySelectorAll(".question-block");
+        questionNumber = 1;
+
+        questionBlocks.forEach((block) => {
+            const questionTitle = block.querySelector("h6");
+            questionTitle.textContent = `Question ${questionNumber}`;
+            questionNumber++;
+        });
+    }
+
+    function createQuiz() {
+    const quizTitle = document.getElementById("quizTitle").value;
+    const quizTimer = document.getElementById("quizTimer").value; // Get the quiz timer value
+    const questionBlocks = document.querySelectorAll(".question-block");
+    const quizData = [];
+
+    questionBlocks.forEach((block) => {
+        // ... (same as before)
+        quizData.push(answer);
+    });
+
+    // Construct the data to send
+    const data = {
+        quizTitle: quizTitle,
+        quizTimer: quizTimer,
+        quizData: quizData
+    };
+
+    // Send the data using Fetch API
+    fetch('/teacher-classwork', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+        // Handle the response as needed
+        console.log(result);
+        const quizModal = new bootstrap.Modal(document.getElementById("quizModal"));
+        quizModal.hide();
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+    document.getElementById("addQuestionBtn").addEventListener("click", addQuestionBlock);
+    document.getElementById("createQuizBtn").addEventListener("click", createQuiz);
+</script>
+

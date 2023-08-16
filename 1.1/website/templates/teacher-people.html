@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}People for {{ subject.course }}{% endblock %}
+
+{% block barnav %}
+    {% include "navbar-teacher.html" %}
+    {% include "navbar-teacher-secondary.html" %}
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-5">
+    <h3 style="margin-top: 150px; font-family: 'ProdigySansExtraBold';">TEACHERS</h3>
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="list-group" style="font-family: ProductSansBold; margin-top: 10px;">
+                {% for teacher in subject.teachers %}
+                <li class="list-group-item">
+                    {{ teacher.givenName }} {{ teacher.lastName }}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <h3 style="margin-top: 10px; font-family: 'ProdigySansExtraBold'; display: inline;">STUDENTS</h3>
+            <a href="#" class="btn btn-warning btn-sm float-end" onclick="copyInvitationCode('{{ subject.id }}', '{{ subject.invCode }}')">
+                <i class="fas fa-plus"></i>
+            </a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="list-group" style="font-family: ProductSansBold; margin-top: 10px;">
+                {% for student in subject.students %}
+                <li class="list-group-item">
+                    {{ student.givenName }} {{ student.lastName }}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    function copyInvitationCode(subjectId, subjectInvCode) {
+        const codeToCopy = generateInvitationCode(subjectId, subjectInvCode);
+        const textarea = document.createElement('textarea');
+        textarea.value = codeToCopy;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+
+        // Flash a message to indicate successful copy
+        alert('Invitation code copied to clipboard!');
+    }
+
+    function generateInvitationCode(subjectId, subjectInvCode) {
+        // Here, you can customize the logic to generate the invitation code based on subjectId and subjectInvCode
+        return subjectInvCode; // For now, let's just return the subjectInvCode as it is
+    }
+</script>
+
+
+{% endblock %}

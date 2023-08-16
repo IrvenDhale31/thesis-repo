@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'ProductSansBold';
+    src: url('/static/Product Sans Bold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'ProdigySansExtraBold';
+    src: url('/static/ProdigySans-ExtraBold.ttf') format('truetype');
+}

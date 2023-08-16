@@ -1,0 +1,319 @@
+{% extends "base.html" %} {% block title %}Administrator Homepage{% endblock %}
+{% block barnav%}
+<button
+  class="navbar-toggler"
+  type="button"
+  data-toggle="collapse"
+  data-target="#navbar"
+>
+  <span class="navbar-toggler-icon"></span>
+</button>
+<div class="collapse navbar-collapse" id="navbar">
+  <div class="navbar-nav">
+    <a class="nav-item nav-link" id="home" href="/admin">HOME</a>
+    <a class="nav-item nav-link" id="subject" href="/create-subject"
+      >CREATE SUBJECT</a
+    >
+    <a class="nav-item nav-link" id="subject" href="/create-teacher"
+      >CREATE TEACHER</a
+    >
+    <a class="nav-item nav-link" id="subject" href="/create-student"
+      >CREATE STUDENT</a
+    >
+    <a class="nav-item nav-link" id="logout" href="/logout">LOGOUT</a>
+  </div>
+</div>
+{% endblock %} {% block content %}
+
+<h1
+  class="text-center"
+  style="font-family: 'ProdigySansExtraBold'; color: #080705; padding-top: 20px"
+>
+  TEACHERS
+</h1>
+<div class="table-bordered" style="padding-top: 50px">
+  <table class="table table-striped">
+    <thead
+      style="
+        font-family: 'ProdigySansExtraBold';
+        color: #080705;
+        font-size: 15px;
+      "
+    >
+      <tr>
+        <th scope="col">GIVEN NAME</th>
+        <th scope="col">LAST NAME</th>
+        <th scope="col">EMAIL</th>
+        <th scope="col">SUBJECT</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for teacher in teachers %}
+      <tr style="font-family: 'ProductSansBold'; color: #40434e">
+        <td>{{ teacher.givenName }}</td>
+        <td>{{ teacher.lastName }}</td>
+        <td>{{ teacher.email }}</td>
+        <td>
+          {% for subject in teacher.subjects %} {{ subject.course }} <br /> {% endfor
+          %}
+        </td>
+        <td>
+          <p>
+            <a
+              href="#"
+              onclick="return editTeacher('{{ teacher.id }}')"
+              class="link-warning link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+              >Edit Teacher</a
+            >
+          </p>
+        </td>
+        <td>
+          <p>
+            <a
+              href="#"
+              onclick="return deleteTeacher('{{ teacher.id }}')"
+              class="link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+              >Delete Teacher</a
+            >
+          </p>
+        </td>
+      </tr>
+      {% endfor %}
+      <tr style="font-family: 'ProductSansBold'; color: #40434e">
+        <!-- New table row for the link to create another class -->
+        <td colspan="7" style="text-align: left">
+          <p><a href="/create-teacher" class="link-info">Create Teacher</a></p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<h1
+  class="text-center"
+  style="font-family: 'ProdigySansExtraBold'; color: #080705; padding-top: 20px"
+>
+  SUBJECTS
+</h1>
+<div class="table-bordered" style="padding-top: 50px">
+  <table class="table table-striped">
+    <thead
+      style="
+        font-family: 'ProdigySansExtraBold';
+        color: #080705;
+        font-size: 15px;
+      "
+    >
+      <tr>
+        <th scope="col">COURSE NAME</th>
+        <th scope="col">COURSE CODE</th>
+        <th scope="col">SECTION</th>
+        <th scope="col">TEACHER</th>
+        <th scope="col">STUDENTS ENROLLED</th>
+        <th scope="col">INVITATION CODE</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for course in subject %}
+      <tr style="font-family: 'ProductSansBold'; color: #40434e">
+        <td>{{ course.course }}</td>
+        <td>{{ course.code }}</td>
+        <td>{{ course.section }}</td>
+        <td>
+          {% for teacher in course.teachers %} {{ teacher.givenName }} {{
+          teacher.lastName }} {% if not loop.last %}, {% endif %} {% endfor %}
+        </td>
+        <td> {% for student in course.students %}
+          {{ student.givenName }} {{ student.lastName }}<br />
+        {% endfor %}</td>
+        <td>{{ course.invCode }}</td>
+        <td>
+          <p>
+            <a
+              href="#"
+              onclick="return editSubj('{{ course.code }}', '{{ course.id }}')"
+              class="link-warning link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+              >Edit Subject</a
+            >
+          </p>
+        </td>
+        <td>
+          <p>
+            <a
+              href="#"
+              onclick="return confirmDelete('{{ course.code }}', '{{ course.id }}')"
+              class="link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+              >Delete Subject</a
+            >
+          </p>
+        </td>
+      </tr>
+      {% endfor %}
+      <tr style="font-family: 'ProductSansBold'; color: #40434e">
+        <!-- New table row for the link to create another class -->
+        <td colspan="7" style="text-align: left">
+          <p><a href="/create-subject" class="link-info">Create Subject</a></p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<h1
+  class="text-center"
+  style="font-family: 'ProdigySansExtraBold'; color: #080705; padding-top: 20px"
+>
+  STUDENTS
+</h1>
+<div class="table-bordered" style="padding-top: 50px">
+  <table class="table table-striped">
+    <thead
+      style="
+        font-family: 'ProdigySansExtraBold';
+        color: #080705;
+        font-size: 15px;
+      "
+    >
+      <tr>
+        <th scope="col">EMAIL</th>
+        <th scope="col">GIVEN NAME</th>
+        <th scope="col">LAST NAME</th>
+        <th scope="col">ID NUMBER</th>
+        <th scope="col">SUBJECTS ENROLLED</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for student in students %}
+      <tr style="font-family: 'ProductSansBold'; color: #40434e">
+        <td>{{ student.email }}</td>
+        <td>{{ student.givenName }}</td>
+        <td>{{ student.lastName }}</td>
+        <td>{{ student.idNumber }}</td>
+        <td>
+          {% for subject in student.enrolled_courses %} {{ subject.course }}<br />
+          {% endfor %}
+        </td>
+        <td>
+          <p>
+            <a
+              href="#"
+              onclick="return enrollStudent('{{ student.id }}')"
+              class="link-success link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+              >Enroll Student</a
+            >
+          </p>
+        </td>
+        <td>
+          <p>
+            <a
+              href="#"
+              onclick="return unenrollStudent('{{ student.id }}')"
+              class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+              >Unenroll Student</a
+            >
+          </p>
+        </td>
+        <td>
+          <p>
+            <a
+              href="#"
+              onclick="return editStudent('{{ student.id }}')"
+              class="link-warning link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+              >Edit Student</a
+            >
+          </p>
+        </td>
+        <td>
+          <p>
+            <a
+              href="#"
+              onclick="return deleteStudent('{{ student.id }}')"
+              class="link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+              >Delete Student</a
+            >
+          </p>
+        </td>
+      </tr>
+      {% endfor %}
+      <tr style="font-family: 'ProductSansBold'; color: #40434e">
+        <!-- New table row for the link to create another class -->
+        <td colspan="4" style="text-align: left">
+          <p><a href="/create-student" class="link-info">Create Student</a></p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+  function confirmDelete(courseCode, courseId) {
+    var confirmResult = confirm("Are you sure you want to delete this course?");
+    if (confirmResult) {
+      var deleteUrl = "/del-course/" + courseId;
+      window.location.href = deleteUrl;
+    }
+    return confirmResult;
+  }
+</script>
+
+<script>
+  function editSubj(courseCode, courseId) {
+    var editSubj = "/edit-subj/" + courseId;
+    window.location.href = editSubj;
+  }
+</script>
+
+<script>
+  function deleteTeacher(teacherID) {
+    var confirmResult = confirm(
+      "Are you sure you want to delete this teacher?"
+    );
+    if (confirmResult) {
+      var deleteUrl = "/del-teacher/" + teacherID;
+      window.location.href = deleteUrl;
+    }
+    return confirmResult;
+  }
+</script>
+
+<script>
+  function deleteStudent(studentID) {
+    var confirmResult = confirm(
+      "Are you sure you want to delete this student?"
+    );
+    if (confirmResult) {
+      var deleteUrl = "/del-student/" + studentID;
+      window.location.href = deleteUrl;
+    }
+    return confirmResult;
+  }
+</script>
+
+<script>
+  function editStudent(studentID) {
+    var editSubj = "/edit-student/" + studentID;
+    window.location.href = editSubj;
+  }
+</script>
+
+<script>
+  function editTeacher(teacherID) {
+    var editSubj = "/edit-teacher/" + teacherID;
+    window.location.href = editSubj;
+  }
+</script>
+
+<script>
+  function enrollStudent(studentID) {
+    var enrollStudent = "/enroll-student/" + studentID;
+    window.location.href = enrollStudent;
+  }
+</script>
+
+<script>
+  function unenrollStudent(studentID) {
+    var enrollStudent = "/unenroll-student/" + studentID;
+    window.location.href = enrollStudent;
+  }
+</script>
+{% endblock %}

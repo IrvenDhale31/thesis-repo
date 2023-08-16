@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Student Sign Up{% endblock %}
+
+{% block barnav%}
+<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar">
+    <span class="navbar-toggler-icon"></span>
+</button>
+    <div class="collapse navbar-collapse" id="navbar">
+        <div class="navbar-nav">
+            <a class="nav-item nav-link" id="login" href="/login">LOGIN</a>
+            <a class="nav-item nav-link" id="signUp" href="/sign-up-student">SIGN-UP</a>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content%}
+
+<div class="container" method="POST">
+    <div class="row">
+      <div class="col-md-6" style="margin-top: 150px;">
+        <!-- Content for the first column -->
+        <picture>
+            <source srcset="/static/logo.png" type="">
+            <img src="..." class="img-fluid" alt="...">
+        </picture>
+      </div>
+      <div class="col-md-6" style="margin-top: 50px;">
+        <!-- Content for the second column -->
+        <h1 style="font-family: 'ProdigySansExtraBold'; display: grid; place-items: center; font-size: 60px;">CREATE STUDENT</h1>
+        <div id="content" style="font-family: 'ProductSansBold'; margin-top: 20px;">
+            <form method="POST">
+                <div class="mb-3">
+                    <label for="studentGname" class="form-label">Given Name</label>
+                    <input type="text" class="form-control" id="studentGname" name="studentGname">
+                </div>
+                <div class="mb-3">
+                  <label for="studentLname" class="form-label">Last Name</label>
+                  <input type="text" class="form-control" id="studentLname" name="studentLname">
+                </div>
+                <div class="mb-3">
+                  <label for="studentEmail" class="form-label">Email Address</label>
+                  <input type="email" class="form-control" id="studentEmail" aria-describedby="emailHelp" name="studentEmail">
+                  <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                </div>
+                <div class="mb-3">
+                  <label for="studentPassword" class="form-label">Password</label>
+                  <input type="password" class="form-control" id="studentPassword" name="studentPassword">
+                </div>
+                <div class="mb-3 form-check">
+                  <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                  <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                </div>
+                <div class="mb-3">
+                  <label for="studentIDNum" class="form-label">ID Number</label>
+                  <input type="number" class="form-control" id="studentIDNum" name="studentIDNum">
+              </div>
+                <button type="submit" class="btn btn-primary" style="background-color: #912F40; border: none; color: #FFFFFA;">CREATE</button>
+            </form>
+        </div>       
+      </div>
+    </div>
+  </div>
+{% endblock %}

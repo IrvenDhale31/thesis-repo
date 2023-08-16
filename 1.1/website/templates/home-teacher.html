@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block barnav %}
+    {% include "navbar-teacher.html" %}
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-5 pt-4" style="font-family: 'ProductSansBold'; padding: 0;">
+    <div class="row">
+        {% for subject in teacher.subjects %}
+        <div class="col-md-4">
+            <!-- Use col-md-3 to make four tiles per row -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="subject-title" style="background-color: #F8E16C; padding: 10px; border-radius: 10px; margin-bottom: 10px;">
+                        <a href="#" onclick="return teacherStream('{{ subject.id }}')" style="text-decoration: none;">
+                            <h5 class="card-title" style="font-family: ProdigySansExtraBold; margin: 0; text-transform: uppercase; color: black;">{{ subject.course }}</h5>
+                        </a>
+                    </div>
+                    <p class="card-text">Teacher: {{ teacher.givenName }} {{ teacher.lastName }} <br>Section: {{ subject.section }} <br>Subject Code: {{ subject.code }}</p>
+                    <a href="#" onclick="return teacherStream('{{ subject.id }}')" class="btn btn-warning">View Subject</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    /* CSS for the hover effect on the subject title */
+    .subject-title {
+        background-color: #FFFCF7;
+        padding: 10px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        transition: background-color 0.2s ease;
+    }
+
+    .subject-title a {
+        text-decoration: none;
+    }
+
+    .subject-title:hover {
+        background-color: #FFC2B4 !important; /* Change this color to the desired color on hover */
+    }
+
+    /* Remove default margin on body */
+    body {
+        margin: 0;
+    }
+</style>
+
+<script>
+function teacherStream(subjID) {
+      var teacherStream = "/teacher-stream/" + subjID;
+      window.location.href = teacherStream;
+  }
+</script>
+{% endblock %}

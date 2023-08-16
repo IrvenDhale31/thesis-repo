@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Enroll{% endblock %}
+
+{% block barnav %}
+    {% include "navbar-student.html" %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-6" style="margin-top: 150px;">
+            <!-- Content for the first column -->
+            <picture>
+                <source srcset="/static/logo.png" type="">
+                <img src="..." class="img-fluid" alt="...">
+            </picture>
+        </div>
+
+        <div class="col-md-6" style="margin-top: 50px;">
+            <!-- Content for the second column -->
+            <h1 style="font-family: 'ProdigySansExtraBold'; display: grid; place-items: center; font-size: 60px; padding-top: 50px;">ENROLL SUBJECT</h1>
+
+            <div id="content" style="font-family: 'ProductSansBold'; margin-top: 20px;">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="subjCode" class="form-label">Subject Code</label>
+                        <input type="text" class="form-control" id="subjCode" name="subjCode">
+                        <small class="form-text text-muted" style="font-style: italic;">Enter the six-character code</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="background-color: #912F40; border: none; color: #FFFFFA;">ENROLL</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

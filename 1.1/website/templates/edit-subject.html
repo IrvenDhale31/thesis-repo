@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Edit Subject{% endblock %}
+
+{% block barnav%}
+<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar">
+    <span class="navbar-toggler-icon"></span>
+</button>
+    <div class="collapse navbar-collapse" id="navbar">
+        <div class="navbar-nav">
+            <a class="nav-item nav-link" id="home" href="/admin">HOME</a>
+            <a class="nav-item nav-link" id="subject" href="/create-subject">CREATE COURSE</a>
+            <a class="nav-item nav-link" id="logout" href="/logout">LOGOUT</a>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content%}
+<div class="container" method="POST">
+    <div class="row">
+      <div class="col-md-6" style="margin-top: 150px;">
+        <!-- Content for the first column -->
+        <picture>
+            <source srcset="/static/logo.png" type="">
+            <img src="..." class="img-fluid" alt="...">
+        </picture>
+      </div>
+      <div class="col-md-6" style="margin-top: 50px;">
+        <!-- Content for the second column -->
+        <h1 style="font-family: 'ProdigySansExtraBold'; display: grid; place-items: center; font-size: 60px;">EDIT SUBJECT</h1>
+        <div id="content" style="font-family: 'ProductSansBold'; margin-top: 20px;">
+            <form method="POST">
+                <div class="mb-3">
+                  <label for="subjectSection" class="form-label">Section</label>
+                  <input type="text" class="form-control" id="subjectSection" name="subjectSection" value="{{ subj.section }}">
+              </div>
+                <div class="mb-3">
+                  <label for="subjectName" class="form-label">Subject Name</label>
+                  <input type="text" class="form-control" id="subjectName" name="subjectName" value="{{ subj.course }}">
+              </div>
+              <div class="mb-3">
+                <label for="subjectTeacher" class="form-label">Teacher</label>
+                <select class="form-control" id="subjectTeacher" name="subjectTeacher">
+                    {% for teacher in teachers %}
+                    <option value="{{ teacher.id }}" {% if teacher in subj.teachers %}selected{% endif %}>{{ teacher.givenName }} {{ teacher.lastName }}</option>
+                    {% endfor %}
+                </select>
+            </div>            
+            <div class="mb-3">
+              <label for="subjectCode" class="form-label">Subject Code</label>
+              <input type="text" class="form-control" id="subjectCode" name="subjectCode" value="{{ subj.code }}">
+          </div>
+                <button type="submit" class="btn btn-primary" style="background-color: #912F40; border: none; color: #FFFFFA;">SAVE</button>
+            </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

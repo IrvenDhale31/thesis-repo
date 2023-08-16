@@ -1,0 +1,34 @@
+<!-- Modal for Creating Assignments -->
+<div class="modal fade" id="assignmentModal" tabindex="-1" role="dialog" aria-labelledby="assignmentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-dark">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="assignmentModalLabel" style="font-family: 'ProdigySansExtraBold';">Create Assignment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Assignment Form -->
+                <form method="POST" enctype="multipart/form-data" style="font-family: 'ProductSansBold';">
+                    <input type="hidden" name="content_type" value="assignment">
+                    <div class="mb-3">
+                        <label for="assignment_title" class="form-label">Assignment Title</label>
+                        <input type="text" class="form-control" id="assignment_title" name="assignment_title" placeholder="Enter the assignment title" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="assignment_description" class="form-label">Assignment Description</label>
+                        <textarea class="form-control" id="assignment_description" name="assignment_description" rows="6" placeholder="Enter the assignment description" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="assignment_due_date" class="form-label">Due Date</label>
+                        <input type="datetime-local" class="form-control" id="assignment_due_date" name="assignment_due_date" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="assignment_files" class="form-label">Upload Files</label>
+                        <input type="file" class="form-control" id="assignment_files" name="assignment_files[]" multiple>
+                    </div>                    
+                    <button type="submit" class="btn btn-warning">CREATE</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

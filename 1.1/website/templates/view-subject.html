@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}{{ subject.course }}{% endblock %}
+
+{% block barnav %}
+    {% include "navbar-student.html" %}
+{% endblock %}
+
+{% block content %}
+    <!-- Title card for the subject details -->
+    <div class="subject-title-card" style="margin-top: 100px;">
+        <h2>{{ subject.course|upper }}</h2>
+        <p style="padding-left: 20px; font-family: 'ProductSansBold';">{% for teacher in subject.teachers %}{{ teacher.givenName }} {{ teacher.lastName }}{% endfor %}</p>
+    </div>
+    
+
+    <!-- Display the subject details here -->
+    <div class="subject-details""> <!-- Add margin-top here -->
+        <h1>{{ subject.course }}</h1>
+        <p>Subject Code: {{ subject.code }}</p>
+        <p>Teacher: {% for teacher in subject.teachers %}{{ teacher.givenName }} {{ teacher.lastName }}{% endfor %}</p>
+        <p>Section: {{ subject.section }}</p>
+        <!-- Add more subject details if needed -->
+    </div>
+
+    <style>
+        /* CSS for the title card */
+        .subject-title-card {
+            background-color: #C2D8B9;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .subject-title-card h2 {
+            font-family: 'ProdigySansExtraBold';
+            text-transform: uppercase;
+            color: black;
+            text-align: center;
+            margin: 0;
+            text-align: left;
+            padding-left: 20px;
+            padding-top: 80px;
+        }
+
+        /* CSS for the subject details */
+        .subject-details {
+            font-family: 'ProductSansBold';
+        }
+
+        .subject-details h1 {
+            font-size: 24px;
+        }
+
+        .subject-details p {
+            margin-bottom: 10px;
+        }
+
+        /* Fixed positioning for the navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+        }
+    </style>
+{% endblock %}

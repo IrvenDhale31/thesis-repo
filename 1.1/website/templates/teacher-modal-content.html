@@ -1,0 +1,24 @@
+<div class="modal fade" id="contentModal" tabindex="-1" aria-labelledby="contentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-dark"> <!-- Add modal-dark class -->
+        <div class="modal-content"> <!-- Add modal-dark class -->
+            <div class="modal-header">
+                <h5 class="modal-title" id="contentModalLabel" style="font-family: 'ProdigySansExtraBold';">SELECT CONTENT TYPE</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- List of content types -->
+                <ul class="list-group" style="font-family: 'ProductSansBold';">
+                    <li class="list-group-item" onclick="createContent('Announcement')">Announcement</li>
+                    <li class="list-group-item" onclick="createContent('Material')">Material</li>
+                    <li class="list-group-item" onclick="createContent('Assignment')">Assignment</li>
+                    <li class="list-group-item" onclick="createContent('Quiz')">Quiz</li>
+                    <li class="list-group-item" onclick="createContent('Exam')">Exam</li>
+                    <!-- Add more list items as needed -->
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="font-family: 'ProductSansBold';">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

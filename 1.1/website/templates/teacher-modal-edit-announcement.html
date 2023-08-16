@@ -1,0 +1,59 @@
+<!-- Modal -->
+<div class="modal fade dark-mode-modal" id="editModal{{ content.id }}" tabindex="-1" aria-labelledby="editModal{{ content.id }}Label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content dark-mode-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-white" id="editModal{{ content.id }}Label" style="font-family: 'ProdigySansExtraBold';">Edit Announcement</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="POST" action="{{ url_for('auth.edit_announcement', announcement_id=content.id) }}">
+                <div class="modal-body">
+                    <div class="form-group" style="font-family: 'ProductSansBold';">
+                        <label class="text-white" for="new_title">New Title</label>
+                        <input type="text" class="form-control" id="new_title" name="new_title" value="{{ content.title }}">
+                    </div>
+                    <div class="form-group" style="font-family: 'ProductSansBold';">
+                        <label class="text-white" for="new_content">New Content</label>
+                        <textarea class="form-control" id="new_content" name="new_content" rows="6">{{ content.content }}</textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-warning" style="font-family: 'ProductSansBold';">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+/* CSS for Dark Mode */
+.dark-mode-modal .modal-content {
+    background-color: #333;
+    color: #fff;
+}
+
+.dark-mode-modal .modal-title {
+    color: #fff;
+}
+
+.dark-mode-modal .form-group label {
+    color: #fff;
+}
+
+.dark-mode-modal .btn-secondary {
+    background-color: #444;
+    border-color: #444;
+    color: #fff;
+}
+
+.dark-mode-modal .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: #fff;
+}
+
+.dark-mode-modal .btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+</style>

@@ -1,0 +1,64 @@
+<nav class="navbar bg-dark" data-bs-theme="dark">
+  <div class="container-fluid" style="margin-top: 50px; font-family: 'ProductSansBold'; padding-left: 65px;">
+    <a class="navbar-brand" href="#" onclick="return teacherStream('{{ subject.id }}')" style="font-size: 18px;">{{ subject.course }}</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link aria-current="page" href="#" onclick="return teacherStream('{{ subject.id }}')">Stream</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" aria-current="page" href="#" onclick="return teacherClasswork('{{ subject.id }}')">Classwork</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" onclick="return teacherPeople('{{ subject.id }}')">People</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" onclick="return teacherGrades('{{ subject.id }}')">Grades</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<style>
+  /* CSS for the fixed positioning of the navbar */
+  .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      left: 0; /* Add this to align the navbar to the most left */
+      margin-left: 0; /* Add this to remove any left margin */
+      font-size: 18px;
+  }
+</style>
+
+<script>
+  function teacherStream(subjID) {
+      var teacherStream = "/teacher-stream/" + subjID;
+      window.location.href = teacherStream;
+  }
+</script>
+
+<script>
+  function teacherClasswork(subjID) {
+      var teacherClasswork= "/teacher-classwork/" + subjID;
+      window.location.href = teacherClasswork;
+  }
+</script>
+
+<script>
+  function teacherPeople(subjID) {
+      var teacherPeople= "/teacher-people/" + subjID;
+      window.location.href = teacherPeople;
+  }
+</script>
+
+<script>
+  function teacherGrades(subjID) {
+      var teacherGrades= "/teacher-grades/" + subjID;
+      window.location.href = teacherGrades;
+  }
+</script>

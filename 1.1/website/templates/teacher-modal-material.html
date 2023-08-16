@@ -1,0 +1,31 @@
+<!-- Material Modal -->
+<div class="modal fade" id="materialModal" tabindex="-1" aria-labelledby="materialModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-dark">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="materialModalLabel" style="font-family: 'ProdigySansExtraBold';">CREATE MATERIAL</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Content Type Form -->
+                <form enctype="multipart/form-data"  style="font-family: 'ProductSansBold';" method="post" onsubmit="return createContent('Material');">
+                    <input type="hidden" name="content_type" value="material">
+                    <div class="mb-3">
+                        <label for="materialTitle" class="form-label">Title</label>
+                        <input type="text" class="form-control" id="materialTitle" name="materialTitle" placeholder="Enter the material title" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="materialContent" class="form-label">Content</label>
+                        <textarea class="form-control" id="materialContent" name="materialContent" rows="5" placeholder="Enter the material content" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="materialFile" class="form-label">Upload File</label>
+                        <input type="file" class="form-control" id="materialFile" name="materialFile">
+                        <input type="hidden" name="subject_id" value="{{ subject_id }}">
+                    </div>
+                    <button type="submit" class="btn btn-warning">CREATE</button>
+                </form>                                                            
+            </div>                                               
+        </div>
+    </div>
+</div>

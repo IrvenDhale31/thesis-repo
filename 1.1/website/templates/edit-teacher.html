@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Edit Teacher{% endblock %}
+
+{% block barnav%}
+<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar">
+    <span class="navbar-toggler-icon"></span>
+</button>
+    <div class="collapse navbar-collapse" id="navbar">
+        <div class="navbar-nav">
+            <a class="nav-item nav-link" id="home" href="/admin">HOME</a>
+            <a class="nav-item nav-link" id="subject" href="/create-subject">CREATE SUBJECT</a>
+            <a class="nav-item nav-link" id="subject" href="/create-teacher">CREATE TEACHER</a>
+            <a class="nav-item nav-link" id="logout" href="/logout">LOGOUT</a>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content%}
+<div class="container" method="POST">
+  <div class="row">
+    <div class="col-md-6" style="margin-top: 150px;">
+      <!-- Content for the first column -->
+      <picture>
+          <source srcset="/static/logo.png" type="">
+          <img src="..." class="img-fluid" alt="...">
+      </picture>
+    </div>
+    <div class="col-md-6" style="margin-top: 50px;">
+      <!-- Content for the second column -->
+      <h1 style="font-family: 'ProdigySansExtraBold'; display: grid; place-items: center; font-size: 60px;">EDIT TEACHER</h1>
+      <div id="content" style="font-family: 'ProductSansBold'; margin-top: 20px;">
+            <form method="POST">
+                <div class="mb-3">
+                    <label for="teacherGname" class="form-label">Given Name</label>
+                    <input type="text" class="form-control" id="teacherGname" name="teacherGname" value="{{ teacher.givenName }}">
+                </div>
+                <div class="mb-3">
+                  <label for="teacherLname" class="form-label">Last Name</label>
+                  <input type="text" class="form-control" id="teacherLname" name="teacherLname" value="{{ teacher.lastName }}">
+                </div>
+                <div class="mb-3">
+                  <label for="teacherEmail" class="form-label">Email Address</label>
+                  <input type="email" class="form-control" id="teacherEmail" aria-describedby="emailHelp" id="teacherEmail" name="teacherEmail" value="{{ teacher.email }}">
+                <div class="form-text">We'll never share your email with anyone else.</div>
+                </div>
+                <div class="mb-3">
+                  <label for="teacherPassword" class="form-label">Password</label>
+                  <input type="password" class="form-control" id="teacherPassword" name="teacherPassword">
+                </div>
+                <button type="submit" class="btn btn-primary" style="background-color: #912F40; border: none; color: #FFFFFA;">EDIT</button>
+              </form>
+  </div>
+</div>
+{% endblock %}

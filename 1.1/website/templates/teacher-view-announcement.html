@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Classwork for {{ announcement.subject.course }}{% endblock %}
+
+{% block barnav %}
+    {% include "navbar-teacher.html" %}
+    {% include "navbar-teacher-secondary.html" %}
+{% endblock %}
+
+{% block content %}
+<div class="container" style="margin-top: 150px;">
+    <div class="announcement-content mt-4"> <!-- Add 'mt-4' for top margin -->
+        <!-- Display the announcement title -->
+        <h1 style="text-align: justify; font-family: 'ProdigySansExtraBold';">{{ announcement.title|upper }}</h1>
+
+        <!-- Display the teacher who created the announcement and date of creation -->
+        <p class="text-muted" style="text-align: justify; font-family: 'ProductSansBold';">
+            Posted on: {% if announcement.created_at %}{{ announcement.created_at.strftime('%Y-%m-%d %H:%M') }}{% else %}Date not available{% endif %}
+        </p>
+
+        <!-- Divider line -->
+        <hr>
+
+        <!-- Display the announcement content -->
+        <p style="text-align: justify; font-family: 'ProductSansBold';">{{ announcement.content }}</p>
+
+        <!-- Add any additional information you want to display -->
+    </div>
+</div>
+{% endblock %}

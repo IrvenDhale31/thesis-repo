@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+
+{% block barnav%}
+<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar">
+    <span class="navbar-toggler-icon"></span>
+</button>
+    <div class="collapse navbar-collapse" id="navbar">
+        <div class="navbar-nav">
+            <a class="nav-item nav-link" id="login" href="/login">LOGIN</a>
+            <a class="nav-item nav-link" id="signUp" href="/sign-up-student">SIGN UP</a>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content%}
+<div class="container">
+  <div class="row">
+      <div class="col-md-6" style="margin-top: 150px;">
+          <!-- Content for the first column -->
+          <picture>
+              <source srcset="/static/logo.png" type="">
+              <img src="..." class="img-fluid" alt="...">
+          </picture>
+      </div>
+      <div class="col-md-6" style="margin-top: 50px;">
+          <!-- Content for the second column -->
+          <h1 style="font-family: 'ProdigySansExtraBold'; display: grid; place-items: center; font-size: 60px;">LOGIN</h1>
+          <form style="font-family: 'ProductSansBold'; margin-top: 50px;" method="POST">
+              <div class="mb-3">
+                  <label for="email" class="form-label">Email address</label>
+                  <input type="email" class="form-control" id="email" aria-describedby="emailHelp" name="email">
+                  <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+              </div>
+              <div class="mb-3">
+                  <label for="password" class="form-label">Password</label>
+                  <input type="password" class="form-control" id="password" name="password">
+              </div>
+              <div class="mb-3 form-check">
+                  <input type="checkbox" class="form-check-input" id="showPasswordCheckbox">
+                  <label class="form-check-label" for="showPasswordCheckbox">Show Password</label>
+              </div>
+              <button type="submit" class="btn btn-primary">LOG IN</button>
+          </form>
+      </div>
+  </div>
+</div>
+
+<script>
+  const showPasswordCheckbox = document.getElementById('showPasswordCheckbox');
+  const passwordInput = document.getElementById('password');
+
+  showPasswordCheckbox.addEventListener('change', function () {
+      if (showPasswordCheckbox.checked) {
+          passwordInput.setAttribute('type', 'text');
+      } else {
+          passwordInput.setAttribute('type', 'password');
+      }
+  });
+</script>
+{% endblock %}
